@@ -3,8 +3,20 @@
 -------------------------------------------------------------------------------
 Filename   : scrabbleAPI.py
 Date       : 2013-04-20
-Author     : Joe Lotz
+Author     : Joe Lotz <joelotz@gmail.com>
 Description: 
+This is my attempt at building an API from a website. It utilizes web scraping, 
+assumes an internet connect and access to http://www.scrabblefinder.com, 
+scrabblefinder is authored by David Shimoda @scrabblefinder
+
+Please follow the first rule of web-scraping... Don't be a dick.
+
+This could is not intended to be "production-quality" rather it was built to 
+practice and learn building APIs to extend website functionality. 
+It was directly inspired and motivated by Asheesh Laroia in his wonderful 
+PyCon talks.(http://pyvideo.org/)
+
+SCRABBLE® is a registered trademark...duh
 -------------------------------------------------------------------------------
 '''
 def scrape_page(url):
@@ -30,53 +42,51 @@ def make_dictionary(names):
         d[key].append(name)
 
     return d    
-    
+        
 def endswith(letters, size=0, words=[]):
-    if len(words) == 0:
+    if len(words) > 0:
+        d = []
+        for word in words:
+            if word.endswith(letters): d.append(word)
+        return d            
+    else: 
         url = ''.join(["http://www.scrabblefinder.com/ends-with/",letters,"/"])
         words = scrape_page(url)
-
-    d = make_dictionary(words)
-    
-    if size > 0:
-        if size not in d.keys():
-            print ("There are no words with size=%i that ends with \"%s\"" % (size,letters))
-        else:
-            return d[size]
-    else:   
-        return d
-
+        d = make_dictionary(words) 
+        if size > 0:
+            if size not in d.keys():
+                print ("There are no words with size=%i that ends with \"%s\"" % (size,letters))
+            else:
+                return d[size]
+        else:   
+            return d
+            
 def startswith(letters, size=0, words=[]):
-    if len(words) == 0:
+    if len(words) > 0:
+        d = []
+        for word in words:
+            if word.startswith(letters): d.append(word)
+        return d            
+    else: 
         url = ''.join(["http://www.scrabblefinder.com/starts-with/",letters,"/"])
         words = scrape_page(url)
-    d = make_dictionary(words) 
-    if size > 0:
-        if size not in d.keys():
-            print ("There are no words with size=%i that start with \"%s\"" % (size,letters))
-        else:
-            return d[size]
-    else:   
-        return d
-
-def 2letter():
+        d = make_dictionary(words) 
+        if size > 0:
+            if size not in d.keys():
+                print ("There are no words with size=%i that start with \"%s\"" % (size,letters))
+            else:
+                return d[size]
+        else:   
+            return d
+        
+def twoletter():
     url = "http://www.scrabblefinder.com/two-letter-scrabble-words"
     return scrape_page(url)
 
-def 3letter():
+def threeletter():
     url = "http://www.scrabblefinder.com/3-letter-words/"
     return scrape_page(url)
     
-def 4letter():
+def fourletter():
     url = "http://www.scrabblefinder.com/4-letter-words/"
     return scrape_page(url)    
-    
-    
-    
-    
-    
-##==============================##
-
-d = endswith(letters="us",size=3)
-
-
